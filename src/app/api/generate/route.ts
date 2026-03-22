@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
 
-const client = new OpenAI({
-  baseURL: "https://api.deepseek.com/v1",
-  apiKey: process.env.DEEPSEEK_API_KEY,
-});
+function getClient() {
+  const OpenAI = require("openai");
+  return new OpenAI({
+    baseURL: "https://api.deepseek.com/v1",
+    apiKey: process.env.DEEPSEEK_API_KEY,
+  });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Input is required" }, { status: 400 });
     }
 
+    const client = getClient();
     const response = await client.chat.completions.create({
       model: "deepseek-chat",
       messages: [
